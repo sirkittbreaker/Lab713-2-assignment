@@ -113,6 +113,12 @@ app.get("/books/:id", (req: Request, res: Response) => {
     res.status(404).send("Book not found");
   }
 });
+app.post("/books", (req: Request, res: Response) => {
+  const newBook: Book = req.body;
+  newBook.id = books.length + 1;
+  books.push(newBook);
+  res.json(newBook);
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
