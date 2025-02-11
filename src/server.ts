@@ -119,6 +119,16 @@ app.post("/books", (req: Request, res: Response) => {
   books.push(newBook);
   res.json(newBook);
 });
+app.put("/books/:id", (req: Request, res: Response) => {
+  const id = parseInt(req.params.id);
+  const book = books.find((book) => book.id === id);
+  if (book) {
+    Object.assign(book, req.body);
+    res.json(book);
+  } else {
+    res.status(404).send("Book not found");
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
