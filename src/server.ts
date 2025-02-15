@@ -90,23 +90,42 @@ const books: Book[] = [
   },
 ];
 
+function getBookByTitle(title: string): Book[] {
+  const filteredBooks = books.filter((book) =>
+    book.title.toLowerCase().startsWith(title.toLowerCase())
+  );
+  return filteredBooks;
+}
+
+function getAllBooks(): Book[] {
+  return books;
+}
+
+function getBookById(id: number): Book | undefined {
+  return books.find((book) => book.id === id);
+}
+
+function addBook(newBook: Book): Book {
+  newBook.id = books.length + 1;
+  books.push(newBook);
+  return newBook;
+}
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello World!");
 });
 app.get("/books", (req: Request, res: Response) => {
   if (req.query.title) {
     const title = req.query.title as string;
-    const filteredBooks = books.filter((book) =>
-      book.title.toLowerCase().startsWith(title.toLowerCase())
-    );
+    const filteredBooks = getBookByTitle(title);
     res.json(filteredBooks);
   } else {
-    res.json(books);
+    res.json(getAllBooks());
   }
 });
 app.get("/books/:id", (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
-  const book = books.find((book) => book.id === id);
+  const book = getBookById(id);
   if (book) {
     res.json(book);
   } else {
@@ -115,13 +134,12 @@ app.get("/books/:id", (req: Request, res: Response) => {
 });
 app.post("/books", (req: Request, res: Response) => {
   const newBook: Book = req.body;
-  newBook.id = books.length + 1;
-  books.push(newBook);
+  addBook(newBook);
   res.json(newBook);
 });
 app.put("/books/:id", (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
-  const book = books.find((book) => book.id === id);
+  const book = getBookById(id);
   if (book) {
     Object.assign(book, req.body);
     res.json(book);
