@@ -5,7 +5,7 @@ export async function uploadFile(
   bucket: string,
   filePath: string,
   file: Express.Multer.File
-): Promise<void> {
+): Promise<string> {
   const params = {
     Bucket: bucket,
     Key: filePath,
@@ -14,7 +14,10 @@ export async function uploadFile(
   };
   try {
     const data = await s3Client.send(new PutObjectCommand(params));
-    console.log("Successfully uploaded file", data);
+    console.log("File uploaded successfully", data);
+    const publicUrl = `https://cnthruujnkkutwrqmslk.supabase.co/storage/v1/object/public/images/${filePath}`;
+    console.log("File uploaded successfully", publicUrl);
+    return publicUrl;
   } catch (error) {
     console.log("Error uploading file", error);
     throw error;
