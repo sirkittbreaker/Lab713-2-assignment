@@ -4,6 +4,7 @@ import {
   getAllBooks,
   getBookById,
   getBookByTitle,
+  updateBook,
 } from "./service/bookService";
 
 const app = express();
@@ -41,8 +42,9 @@ app.put("/books/:id", async (req: Request, res: Response) => {
   const id = parseInt(req.params.id);
   const book = await getBookById(id);
   if (book) {
-    Object.assign(book, req.body);
-    res.json(book);
+    const updatedBook = req.body;
+    await updateBook(id, updatedBook);
+    res.json(updatedBook);
   } else {
     res.status(404).send("Book not found");
   }
