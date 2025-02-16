@@ -24,7 +24,7 @@ export async function uploadFile(
   try {
     const data = await s3Client.send(new PutObjectCommand(params));
     console.log("File uploaded successfully", data);
-    const publicUrl = `https://cnthruujnkkutwrqmslk.supabase.co/storage/v1/object/public/images/${saltedFilePath}`;
+    const publicUrl = `${process.env.SUPABASE_OUTPUT_URL}/${bucket}/${saltedFilePath}`;
     console.log("File uploaded successfully", publicUrl);
     return publicUrl;
   } catch (error) {
