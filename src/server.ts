@@ -6,9 +6,13 @@ import {
   getBookByTitle,
   updateBook,
 } from "./service/bookService";
+import multer from "multer";
+import { uploadFile } from "./service/uploadFileService";
 
 const app = express();
 const port = 3000;
+
+const upload = multer({ storage: multer.memoryStorage() });
 
 app.use(express.json());
 
@@ -47,6 +51,20 @@ app.put("/books/:id", async (req: Request, res: Response) => {
     res.json(updatedBook);
   } else {
     res.status(404).send("Book not found");
+  }
+});
+app.post("/upload", upload.single("file"), async (req: any, res: any) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).send("No file uploaded");
+    }
+    const bucket = "images";
+    const filePath = `uploads/${file.originalname}`;
+    await uploadFile(bucket, filePath, file);
+    res.status(200).send("File uploaded successfully");
+  } catch (error) {
+    res.status(500).send("Error uploading file");
   }
 });
 
