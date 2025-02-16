@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import {
-  Book,
   addBook,
   getAllBooks,
   getBookById,
@@ -34,7 +33,7 @@ app.get("/books/:id", async (req: Request, res: Response) => {
   }
 });
 app.post("/books", async (req: Request, res: Response) => {
-  const newBook: Book = req.body;
+  const newBook = req.body;
   await addBook(newBook);
   res.json(newBook);
 });
